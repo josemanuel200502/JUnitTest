@@ -30,38 +30,49 @@ public class Usuario {
     }
 
     public void ingresar(double ingreso){
+        if(ingreso < 0) {
+            System.out.println("No se puede ingresar una cantidad negativa.");
+            return; // Sale del método sin realizar ninguna acción
+        }
         this.saldo = this.saldo + ingreso;
         System.out.println("Nuevo saldo: "+this.saldo);
         System.out.println("Después de ingresar: "+ingreso+"€ tu nuevo saldo es: "+String.format("%.2f",this.saldo)+"€");
     }
 
-    public static boolean comprobarDni(String dni){
 
-        if(dni==null) return false;
-        String[] letras = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
+    public static boolean comprobarDni(String dni) {
+        if (dni == null) return false;
 
-        dni=dni.trim();
-
+        // Validar longitud
         if (dni.length() != 9) {
             System.out.println("El DNI debe tener 9 caracteres.");
             return false;
         }
 
+        // Validar los primeros 8 caracteres como dígitos
         if (!dni.substring(0, 8).matches("\\d{8}")) {
             System.out.println("Los primeros 8 caracteres deben ser dígitos.");
             return false;
         }
 
+        // Validar que el último carácter sea una letra
         if (!Character.isLetter(dni.charAt(8))) {
             System.out.println("El último carácter debe ser una letra.");
             return false;
         }
 
-        if (!letras[Integer.parseInt(dni.substring(0,8)) % 23].equalsIgnoreCase(String.valueOf(dni.charAt(8)))) {
+        // Calcular la letra a partir de los primeros 8 dígitos
+        int numero = Integer.parseInt(dni.substring(0, 8));
+        String[] letras = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
+        String letraCalculada = letras[numero % 23];
+
+        // Comparar la letra calculada con la letra del DNI proporcionado
+        if (!letraCalculada.equalsIgnoreCase(String.valueOf(dni.charAt(8)))) {
             System.out.println("La letra del DNI no es correcta.");
             return false;
         }
-        return true;
+
+        return true;  // El DNI es válido
     }
 
     public String getNombre() {
